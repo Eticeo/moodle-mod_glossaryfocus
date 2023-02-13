@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -44,7 +43,7 @@ require_once($CFG->libdir."/externallib.php");
  */
 class external extends \external_api {
     /**
-     * Returns get_words() parameters.
+     * Returns glossaryfocus_get_words() parameters.
      *
      * @return \external_function_parameters
      */
@@ -54,6 +53,7 @@ class external extends \external_api {
                 'query' => new external_value(PARAM_TEXT,
                     'Query string (full or partial word name)'),
                 'idglossary' => new external_value(PARAM_INT, 'Glossary master id (0 if none)'),
+                'courseid' => new external_value(PARAM_INT, 'Course id where the glossaryfocus is (0 if none)'),
             )
         );
     }
@@ -61,29 +61,40 @@ class external extends \external_api {
     /**
      * Handles return the element's HTML.
      *
-     * @param $query        | string|null 
-     * @param $idglossary   |  int|null 
+     * @param $query        | string|null
+     * @param $idglossary   |  int|null
      *
      * @return array of words
      */
-    public static function get_words($query, $idglossary) {
-        global $DB;
-        
+    public static function get_words($query, $idglossary, $courseid) {
+        global $DB, $CFG;
+
+        require_once($CFG->dirroot.'/mod/glossaryfocus/lib.php');
+
         $result = [];
         
         $params = array('query' => '%'.$query.'%');
-        $condition ="";
+        $condition = "";
         if ($idglossary > 0) {
             $condition .= " AND glossaryid = :glossaryid";
             $params['glossaryid'] = $idglossary;
         }
-        $listWords = $DB->get_records_sql("SELECT ge.id, ge.concept, g.name
-                                            FROM {glossary_entries} ge 
-                                            INNER JOIN {glossary} g ON (ge.glossaryid = g.id)
-                                            WHERE ".$DB->sql_like('concept', ':query')." ".$condition, $params);
+        $condition .= " AND (g.globalglossary = 1 OR g.course = :courseid)";
+        $params['courseid'] = $courseid;
 
-        foreach ($listWords as $word) {
-            $result[] = ['id' => $word->id, 'name' => $word->concept.' ('.$word->name.')'];
+        $listwords = $DB->get_records_sql("SELECT ge.id, ge.concept, g.name, cm.id as cmid
+                                            FROM {glossary_entries} ge 
+                                            INNER JOIN {glossary} g ON ge.glossaryid = g.id
+                                            INNER JOIN {course_modules} cm ON cm.course = g.course
+                                            INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'glossary'
+                                            WHERE ".$DB->sql_like('concept', ':query')." ".$condition.'
+                                            ORDER BY ge.concept, g.name', $params);
+
+        foreach ($listwords as $word) {
+            $context = \context_module::instance($word->cmid);
+            if (has_capability('mod/glossary:view', $context)) {
+                $result[] = ['id' => $word->id, 'name' => $word->concept.' ('.$word->name.')'];
+            }
         }
 
         return $result;

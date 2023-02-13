@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the glossaryfocus module Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -29,9 +28,11 @@ $string['modulename_help'] = 'Resources for choosing words from a glossary';
 $string['modulenameplural'] = 'Glossaries focus';
 $string['pluginadministration'] = 'Administration glossary focus';
 
-
 $string['select_idglossarymaster'] = 'Master glossary selection';
 $string['otp_all_master'] = 'All';
 
 $string['autocomplete_words'] = 'Select words to display';
 $string['autocomplete_allwords'] = 'All words in the master glossary';
+
+$string['privacy:metadata'] = 'The glossary focus modulee only displays existing glossary data.';
+$string['glossaryfocus:addinstance'] = 'Add a new assignment';
