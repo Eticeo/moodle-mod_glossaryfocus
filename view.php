@@ -1,6 +1,6 @@
 <?php
 
-// This file is part of Moodle - http://moodle.org/
+// This file is part of the glossaryfocus module for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,11 +16,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Glossaryfocus module version information
+ * Prints a particular instance of glossaryfocus
  *
- * @package     mod_glossaryfocus
- * @copyright  2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_glossaryfocus
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
 require('../../config.php');
@@ -28,12 +29,11 @@ require_once($CFG->dirroot.'/mod/glossaryfocus/lib.php');
 require_once($CFG->dirroot.'/mod/glossaryfocus/locallib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
-$id      = optional_param('id', 0, PARAM_INT); // Course Module ID
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID
 
 if (!$cm = get_coursemodule_from_id('glossaryfocus', $id)) {
     print_error('invalidcoursemodule');
 }
-
 
 $glossaryfocus = $DB->get_record('glossaryfocus', array('id'=>$cm->instance), '*', MUST_EXIST);
 $listWords = get_words_for_view($glossaryfocus);
@@ -55,8 +55,6 @@ $event->trigger();
 
 $PAGE->set_url('/mod/glossaryfocus/view.php', array('id' => $cm->id));
 
-
-
 $PAGE->set_title($course->shortname.': '.$glossaryfocus->name);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_activity_record($glossaryfocus);
@@ -66,14 +64,6 @@ $output = $PAGE->get_renderer('mod_glossaryfocus');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($glossaryfocus->name), 2);
 
-/*
-$contentIntro = file_rewrite_pluginfile_urls($glossaryfocus->intro, 'pluginfile.php', $context->id, 'mod_glossaryfocus', 'intro', 1);
-$formatoptions = new stdClass;
-$formatoptions->noclean = true;
-$formatoptions->overflowdiv = true;
-$formatoptions->context = $context;
-$contentIntro = format_text($contentIntro, 1, $formatoptions);
-*/
 $contentIntro = format_module_intro('glossaryfocus', $glossaryfocus, $cm->id);
 echo $OUTPUT->box($contentIntro, "generalbox center clearfix");
 

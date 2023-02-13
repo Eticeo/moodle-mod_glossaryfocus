@@ -16,11 +16,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * List of all glossaryfocus in course
+ * Library of interface functions and constants for module glossaryfocus
  *
- * @package     mod_glossaryfocus
- * @copyright   2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_glossaryfocus
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
 require('../../config.php');
@@ -37,7 +38,6 @@ $event = \mod_glossaryfocus\event\course_module_instance_list_viewed::create(arr
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-
 $strpage         = get_string('modulename', 'glossaryfocus');
 $strpages        = get_string('modulenameplural', 'glossaryfocus');
 $strname         = get_string('name');
@@ -51,7 +51,7 @@ $PAGE->navbar->add($strpages);
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strpages);
 if (!$glossaryfocuss = get_all_instances_in_course('glossaryfocus', $course)) {
-    notice(get_string('thereareno', 'moodle', $strpages), "$CFG->wwwroot/course/view.php?id=$course->id");
+    notice(get_string('thereareno', 'moodle', $strpages), $CFG->wwwroot."/course/view.php?id=".$course->id);
     exit;
 }
 
@@ -92,7 +92,7 @@ foreach ($glossaryfocuss as $glossaryfocus) {
 
     $table->data[] = array (
         $printsection,
-        "<a $class href=\"view.php?id=$cm->id\">".format_string($glossaryfocus->name)."</a>",
+        '<a '.$class.' href="view.php?id='.$cm->id.'">'.format_string($glossaryfocus->name).'</a>',
         format_module_intro('glossaryfocus', $glossaryfocus, $cm->id));
 }
 

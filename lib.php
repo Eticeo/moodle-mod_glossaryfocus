@@ -1,5 +1,6 @@
 <?php
-// This file is part of the glossaryfocus module for Moodle - http://moodle.org/
+
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,11 +16,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Glossaryfocus module core interaction API
+ * Library of interface functions and constants for module glossaryfocus
  *
  * @package    mod_glossaryfocus
- * @copyright  2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
 defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
@@ -34,19 +36,12 @@ defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
 function glossaryfocus_add_instance($data, $mform) {
     global $DB;
 
-    //var_dump($data);
-    //die;
-
     $data->timemodified = time();
     $data->timecreated = time();
     // need to work with list of words
     $save = $data->words;
     $data->words ="";
-/*
-    $displayoptions = array();
-    $displayoptions['printintro']   = $data->printintro;
-    $data->displayoptions = serialize($displayoptions);
-*/
+    
     try {
         //insert glossaryfocus into table
         $data->id = $DB->insert_record("glossaryfocus", $data);
@@ -62,8 +57,7 @@ function glossaryfocus_add_instance($data, $mform) {
         var_dump($e);
         die;
     }
-
-
+    
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($data->coursemodule, 'glossaryfocus', $data->id, $completiontimeexpected);
 
@@ -73,18 +67,15 @@ function glossaryfocus_add_instance($data, $mform) {
 /**
  * Update glossaryfocus instance.
  *
- * @param stdClass $data
- * @param mod_glossaryfocus_mod_form $mform
+ * @param $data     | stdClass
+ * @param $mform    | mod_glossaryfocus_mod_form
  * @return bool true
  */
 function glossaryfocus_update_instance($data, $mform) {
     global $DB;
+    
     $data->id = $data->instance;
-/*
-    $displayoptions = array();
-    $displayoptions['printintro']   = $data->printintro;
-    $data->displayoptions = serialize($displayoptions);
-*/
+    
     //Update the glossaryfocus primary table
     $DB->update_record('glossaryfocus', $data);
 
@@ -111,7 +102,7 @@ function glossaryfocus_update_instance($data, $mform) {
  * this function will permanently delete the instance
  * and any data that depends on it.
  *
- * @param int $id
+ * @param $id  | int of the glossary focus
  * @return bool true if successful
  */
 function glossaryfocus_delete_instance($id) {
@@ -152,7 +143,7 @@ function glossaryfocus_delete_instance($id) {
  * @uses FEATURE_COMPLETION_TRACKS_VIEWS
  * @uses FEATURE_GRADE_HAS_GRADE
  * @uses FEATURE_GRADE_OUTCOMES
- * @param string $feature FEATURE_xx constant for requested feature
+ * @param $feature  | string FEATURE_xx constant for requested feature
  * @return mixed True if module supports feature, null if doesn't know
  */
 function glossaryfocus_supports($feature) {

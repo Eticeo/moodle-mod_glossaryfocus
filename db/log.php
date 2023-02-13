@@ -1,5 +1,6 @@
 <?php
-// This file is part of the glossaryfocus module for Moodle - http://moodle.org/
+
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,11 +16,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of log events
+ * Definition of log events of glossaryfocus
  *
  * @package    mod_glossaryfocus
- * @copyright  2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
 defined('MOODLE_INTERNAL') || die();
