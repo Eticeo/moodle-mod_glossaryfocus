@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,11 +16,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This is the external API for this tool.
+ * External API for glossaryfocus
  *
  * @package    mod_glossaryfocus
- * @copyright  2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 namespace mod_glossaryfocus;
 defined('MOODLE_INTERNAL') || die();
@@ -30,13 +32,15 @@ use external_value;
 use external_single_structure;
 use external_multiple_structure;
 
-require_once("$CFG->libdir/externallib.php");
+require_once($CFG->libdir."/externallib.php");
 
 /**
- * This is the external API for this tool.
+ * Class external
  *
- * @copyright  2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_glossaryfocus
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 class external extends \external_api {
     /**
@@ -57,23 +61,26 @@ class external extends \external_api {
     /**
      * Handles return the element's HTML.
      *
-     * @param  string|null $query
-     * @param  int|null $idglossary
+     * @param $query        | string|null 
+     * @param $idglossary   |  int|null 
+     *
      * @return array of words
      */
     public static function get_words($query, $idglossary) {
         global $DB;
+        
         $result = [];
-
+        
+        $params = array('query' => '%'.$query.'%');
         $condition ="";
         if ($idglossary > 0) {
-            $condition .= " AND glossaryid = $idglossary";
+            $condition .= " AND glossaryid = :glossaryid";
+            $params['glossaryid'] = $idglossary;
         }
-        $listWords = $DB->get_records_sql("
-            SELECT ge.id, ge.concept, g.name
-            FROM {glossary_entries} ge INNER JOIN {glossary} g ON (ge.glossaryid = g.id)
-            WHERE concept like '%$query%' $condition
-        ");
+        $listWords = $DB->get_records_sql("SELECT ge.id, ge.concept, g.name
+                                            FROM {glossary_entries} ge 
+                                            INNER JOIN {glossary} g ON (ge.glossaryid = g.id)
+                                            WHERE ".$DB->sql_like('concept', ':query')." ".$condition, $params);
 
         foreach ($listWords as $word) {
             $result[] = ['id' => $word->id, 'name' => $word->concept.' ('.$word->name.')'];

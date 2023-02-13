@@ -17,7 +17,8 @@
  * Search user selector module.
  *
  * @module mod_glossaryfocus/form-words-selector
- * @copyright 2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

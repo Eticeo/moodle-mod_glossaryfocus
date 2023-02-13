@@ -16,22 +16,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'glossaryfocus', language 'en'
+ * English strings for glossaryfocus
  *
- * @package     mod_glossaryfocus
- * @copyright   2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_glossaryfocus
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
-
-$string['pluginname'] = '[Eticeo] Glossaire focus';
-$string['modulename'] = 'Glossaire focus';
-$string['modulename_help'] = 'Ressources permettant de choisir des mots parmis un glossaire.';
+$string['pluginname'] = '[Eticeo] Glossary focus';
+$string['modulename'] = 'Focus Glossary';
+$string['modulename_help'] = 'Resources for choosing words from a glossary';
 $string['modulenameplural'] = 'Glossaries focus';
-$string['pluginadministration'] = 'Administration glossaire focus';
+$string['pluginadministration'] = 'Administration glossary focus';
 
 
-$string['select_idglossarymaster'] = 'Choix du glossaire maitre';
+$string['select_idglossarymaster'] = 'Master glossary selection';
 $string['otp_all_master'] = 'All';
 
-$string['autocomplete_words'] = 'Choix des mots à afficher';
-$string['autocomplete_allwords'] = 'Tous les mots dans le glossaire maitre';
+$string['autocomplete_words'] = 'Select words to display';
+$string['autocomplete_allwords'] = 'All words in the master glossary';

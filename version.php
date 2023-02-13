@@ -15,22 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code fragment to define the version of the glossaryfocus module
+ * Defines the version of glossaryfocus
+ * Activity that displays glossary definitions selected from one or more given parent glossaries
  *
  * @package    mod_glossaryfocus
- * @copyright  2021 Eticeo <https://eticeo.com> made by Jeremy Carre <jeremy.carre@eticeo.fr>
+ * @copyright  2021 Eticeo <https://eticeo.com>
+ * @author     2021 Jeremy Carre <jeremy.carre@eticeo.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
 defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
 
-$plugin->version   = 2021102604; // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2020110906; // Requires this Moodle version (3.10).
+$plugin->version   = 2021102604;
+$plugin->requires  = 2020110906;
 $plugin->component = 'mod_glossaryfocus';
 $plugin->cron      = 0; // Period for cron to check this module (secs).
 
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = "0.1"; // User-friendly version number.
+$plugin->release   = "1.0";
 
 //This plugin need glossary
 $plugin->dependencies = array(
