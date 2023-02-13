@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
-defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
-
 /**
  * Add glossaryfocus instance.
  *
@@ -38,26 +35,27 @@ function glossaryfocus_add_instance($data, $mform) {
 
     $data->timemodified = time();
     $data->timecreated = time();
-    // need to work with list of words
+    // Need to work with list of words.
     $save = $data->words;
-    $data->words ="";
-    
+    $data->words = "";
+
     try {
-        //insert glossaryfocus into table
+        // Insert glossaryfocus into table.
         $data->id = $DB->insert_record("glossaryfocus", $data);
         $data->words = $save;
         if (!empty($data->words)) {
-            //now for each words selected insert it in glossaryfocus_entries
+            // Now for each words selected insert it in glossaryfocus_entries.
             foreach ($data->words as $word) {
-                $DB->insert_record("glossaryfocus_entries", array("idglossaryfocus"=>$data->id, "idglossaryentrie"=>$word,"timecreated"=>$data->timecreated));
+                $DB->insert_record("glossaryfocus_entries",
+                    array("idglossaryfocus" => $data->id, "idglossaryentry" => $word, "timecreated" => $data->timecreated));
             }
         }
 
     } catch (Exception $e) {
-        var_dump($e);
-        die;
+        
+        return null;
     }
-    
+
     $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
     \core_completion\api::update_completion_date_event($data->coursemodule, 'glossaryfocus', $data->id, $completiontimeexpected);
 
@@ -73,25 +71,24 @@ function glossaryfocus_add_instance($data, $mform) {
  */
 function glossaryfocus_update_instance($data, $mform) {
     global $DB;
-    
+
     $data->id = $data->instance;
-    
-    //Update the glossaryfocus primary table
+
+    // Update the glossaryfocus primary table.
     $DB->update_record('glossaryfocus', $data);
 
-    //Need to update entries table
+    // Need to update entries table.
     if (!empty($data->words)) {
-        // purge all entries
-        $DB->delete_records("glossaryfocus_entries", array("idglossaryfocus"=>$data->id));
+        // Purge all entries.
+        $DB->delete_records("glossaryfocus_entries", array("idglossaryfocus" => $data->id));
 
-        //now for each words selected insert it in glossaryfocus_entries
+        // Now for each words selected insert it in glossaryfocus_entries.
         foreach ($data->words as $word) {
-
-            $DB->insert_record("glossaryfocus_entries", array("idglossaryfocus"=>$data->id, "idglossaryentrie"=>$word));
+            $DB->insert_record("glossaryfocus_entries", array("idglossaryfocus" => $data->id, "idglossaryentry" => $word));
         }
     } else {
-        // We delete all
-        $DB->delete_records("glossaryfocus_entries", array("idglossaryfocus"=>$data->id));
+        // We delete all.
+        $DB->delete_records("glossaryfocus_entries", array("idglossaryfocus" => $data->id));
     }
 
     return true;
@@ -109,19 +106,18 @@ function glossaryfocus_delete_instance($id) {
     global $CFG, $DB;
 
     // Ensure the glossaryfocus exists.
-    if (!$glossaryfocus = $DB->get_record('glossaryfocus', array('id'=>$id))) {
+    if (!$glossaryfocus = $DB->get_record('glossaryfocus', array('id' => $id))) {
         return false;
     }
 
     $cm = get_coursemodule_from_instance('glossaryfocus', $id);
     \core_completion\api::update_completion_date_event($cm->id, 'glossaryfocus', $id, null);
 
+    $DB->delete_records('glossaryfocus', array('id' => $glossaryfocus->id));
 
-    $DB->delete_records('glossaryfocus', array('id'=>$glossaryfocus->id));
-
-    // Ensure the glossaryfocus_entries exists
+    // Ensure the glossaryfocus_entries exists.
     if (!$glossaryfocus = $DB->get_records('glossaryfocus_entries', array('idglossaryfocus' => $id))) {
-        // We don't, so it's over
+        // We don't, so it's over.
         return true;
     }
 
@@ -161,7 +157,7 @@ function glossaryfocus_supports($feature) {
         case FEATURE_COMPLETION_TRACKS_VIEWS:
             return true;
         case FEATURE_BACKUP_MOODLE2:
-            return false;
+            return true;
         default:
             return null;
     }
@@ -172,14 +168,4 @@ function glossaryfocus_supports($feature) {
  */
 function glossaryfocus_cron() {
     return true;
-}
-
-
-/**
- * Get icon mapping for font-awesome.
- */
-function mod_customcert_get_fontawesome_icon_map() {
-    return [
-        'mod_customcert:download' => 'fa-download'
-    ];
 }
